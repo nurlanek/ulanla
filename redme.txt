@@ -1,0 +1,48 @@
+https://www.pythonanywhere.com/user/nurlanbek/consoles/31268760/
+
+1 -pwd
+-ls
+2 -git clone -b master (if files branch in master) https://github.com/nurlanek/procrm.git
+
+after sign in to git whit personle token
+3 -git remote set-url origin https://nurlanek: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@github.com/nurlanek/repo.git
+
+4 - create vitual env
+    - mkvirtualenv --python=/usr/bin/python3.8 venv
+    -clear
+
+5- pip install django
+6- web-app
+    -set virtaulenv : venv
+7- WSGI configuration file:/var/www/nurlanbek_pythonanywhere_com_wsgi.py
+    only
+    # +++++++++++ DJANGO +++++++++++
+# To use your own django app use code like this:
+import os
+import sys
+#
+## assuming your django settings file is at '/home/nurlanbek/mysite/mysite/settings.py'
+## and your manage.py is is at '/home/nurlanbek/mysite/manage.py'
+path = '/home/nurlanbek/procrm/procrm/pocrm'
+if path not in sys.path:
+    sys.path.append(path)
+#
+os.environ['DJANGO_SETTINGS_MODULE'] = 'pocrm.settings'
+#
+## then:
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+
+8- a1. a) install pip install pymysql
+   b) after write to __init__.py
+      import pymysql
+
+      pymysql.install_as_MySQLdb()
+      pip install mysqlclient
+
+    a2. for install templates
+    a) install path in home directory neare the manage.py create directory template
+        'DIRS': [
+            BASE_DIR / "templates"
+        ],
+    b) after isnt app path for example in main app, templates/main

@@ -4,14 +4,14 @@ https://www.pythonanywhere.com/user/nurlanbek/consoles/31268760/
 -ls
 2 -git clone -b master (if files branch in master) https://github.com/nurlanek/procrm.git
 
+if
 after sign in to git whit personle token
 3 -git remote set-url origin https://nurlanek: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@github.com/nurlanek/repo.git
 
 4 - create vitual env
     - mkvirtualenv --python=/usr/bin/python3.8 venv
     -clear
-
-5- pip install django
+5- pip install requirements.txt
 6- web-app
     -set virtaulenv : venv
 7- WSGI configuration file:/var/www/nurlanbek_pythonanywhere_com_wsgi.py
@@ -33,16 +33,18 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'pocrm.settings'
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
-8- a1. a) install pip install pymysql
-   b) after write to __init__.py
-      import pymysql
+8- auth_user table ilk migrationda sorun cikartiyor.
+o yuzden sadece bir modeli migrate edip,
+superuser yarattiktan sonra diger tablolari migrate etmek gerekiyr
 
-      pymysql.install_as_MySQLdb()
-      pip install mysqlclient
+9- if static is not loadgit
 
-    a2. for install templates
-    a) install path in home directory neare the manage.py create directory template
-        'DIRS': [
-            BASE_DIR / "templates"
-        ],
-    b) after isnt app path for example in main app, templates/main
+python manage.py collectstatic
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+MEDIA_URL = "/images/"

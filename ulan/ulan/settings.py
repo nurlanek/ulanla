@@ -21,6 +21,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'main',
     'account',
+    'inventory',
+    'warehouse',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,7 +71,7 @@ WSGI_APPLICATION = 'ulan.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'prodb2',
+        'NAME': 'prodb',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': '127.0.0.1',

@@ -7,7 +7,7 @@ def get_default_user():
 
 class Kroy(models.Model):
     class Meta:
-            verbose_name = ('Крой')
+            verbose_name_plural = ('Крой')
     name = models.CharField(max_length=250, verbose_name='Наименование')
     kroy_no = models.IntegerField(verbose_name='Крой номер')
     ras_tkani = models.FloatField(verbose_name='Расход ткани')
@@ -31,7 +31,7 @@ class Kroy(models.Model):
 
 class Kroy_detail(models.Model):
     class Meta:
-            verbose_name = ('Крой детально')
+            verbose_name_plural = ('Крой детально')
     kroy = models.ForeignKey(Kroy, on_delete=models.CASCADE, verbose_name='Крой')
     pachka = models.CharField(max_length=200, verbose_name='Пачка')
     razmer = models.CharField(max_length=200, verbose_name='Размер')
@@ -48,15 +48,15 @@ class Kroy_detail(models.Model):
 
 class Uchastok(models.Model):
     class Meta:
-            verbose_name = ('Участок')
-    name = models.CharField(max_length=150, verbose_name='Участок')
+            verbose_name_plural = ('Участок')
+    name = models.CharField(max_length=150, verbose_name='Наименование')
 
     def __str__(self):
         return self.name
 
 class Masterdata(models.Model):
     class Meta:
-            verbose_name = ('Общая таблица')
+            verbose_name_plural = ('Общая таблица')
     kroy_no = models.IntegerField(verbose_name='Крой номер')
     uchastok = models.ForeignKey(Uchastok, on_delete=models.CASCADE, verbose_name='Участок')
     edinitsa = models.IntegerField(verbose_name='Единица')
@@ -67,7 +67,7 @@ class Masterdata(models.Model):
 
 class UserUchastok(models.Model):
     class Meta:
-            verbose_name = ('Пользователь для участка')
+            verbose_name_plural = ('Пользователь для участка')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     uchastok = models.ForeignKey(Uchastok, on_delete=models.CASCADE, verbose_name='Участок')
 

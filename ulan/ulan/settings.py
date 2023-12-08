@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'account',
     'inventory',
     'warehouse',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

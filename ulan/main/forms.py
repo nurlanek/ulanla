@@ -9,6 +9,10 @@ class KroyForm(forms.ModelForm):
         fields = ['kroy_no', 'name', 'ras_tkani', 'ras_dublerin', 'edinitsa', 'description']
 
 class KroyDetailForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(KroyDetailForm, self).__init__(*args, **kwargs)
+        self.fields['user'].queryset = get_user_model().objects.all()
+
     class Meta:
         model = Kroy_detail
         fields = ['kroy', 'pachka', 'razmer', 'rost', 'stuk', 'user']  # You can specify specific fields if needed
@@ -25,3 +29,7 @@ class MasterdataSearchForm(forms.Form):
     uchastok_search = forms.CharField(label='Искать по участке', required=False)
     kroy_no_search = forms.CharField(label='Искать по крой но:', required=False)
 
+class MasterdataForm(forms.ModelForm):
+    class Meta:
+        model = Masterdata
+        fields = ['user']  # Add other fields as needed

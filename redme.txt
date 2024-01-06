@@ -34,7 +34,7 @@ from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
 8- auth_user table ilk migrationda sorun cikartiyor.
-o yuzden sadece bir modeli migrate edip,
+o yuzden sadece bir modeli(tabloyu) migrate edip,
 superuser yarattiktan sonra diger tablolari migrate etmek gerekiyr
 
 9- if static is not loadgit

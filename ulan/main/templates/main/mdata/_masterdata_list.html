@@ -53,11 +53,11 @@
             {% for masterdata in masterdata_list %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td><a href="{% url 'mdata-kroy-detail-view' masterdata.pk %}">{{ masterdata.kroy_no }}</a></td>
-                <td>{{ masterdata.uchastok }}-({{ masterdata.user }})</td>
+                <td>{{ masterdata.kroy_no }}</td>
+                <td></td>
                 <td>{{ masterdata.edinitsa }}</td>
                 <td>{{ masterdata.created|date:"d.m.Y H:i" }}</td>
-                <td><b style="color: green;">Завершень</b></td>
+                <td><b style="color: green;">{{ masterdata.status }}-({{ masterdata.user }})</b></td>
                 <td>{{ masterdata.description }}</td>
 
             </tr>

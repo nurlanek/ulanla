@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, UpdateView
-from .models import Kroy, Kroy_detail, Uchastok
-from .forms import KroyForm, KroyDetailForm, Masterdata, MasterdataSearchForm
+from .models import Kroy, Kroy_detail #Uchastok
+from .forms import KroyForm, KroyDetailForm, Masterdata, MasterdataSearchForm, MasterdataForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 
+from django.contrib import messages
 
 
 def index(request):
@@ -20,7 +21,6 @@ def create_masterdata(request):
 
     if request.method == 'POST':
         kroy_no = request.POST.get('kroy_no')
-        uchastok = request.POST.get('uchastok')
         edinitsa = request.POST.get('edinitsa')
         username = request.POST.get('user')  # Get the username
 
@@ -30,14 +30,14 @@ def create_masterdata(request):
             edinitsa = 0  # Default value if parsing fails
 
         # Create a new Masterdata object and save it to the database
-        uchastok = get_object_or_404(Uchastok, pk=uchastok)
+        #uchastok = get_object_or_404(Uchastok, pk=uchastok)
 
         # Get the User instance based on the username
         user = get_object_or_404(User, username=username)
 
         masterdata = Masterdata(
             kroy_no=kroy_no,
-            uchastok=uchastok,
+            #uchastok=uchastok,
             edinitsa=edinitsa,
             user=user,  # Assign the User instance
             # Add other fields here as needed
@@ -64,7 +64,7 @@ class MasterdataListView(ListView):
         if form.is_valid():
             start_date = form.cleaned_data.get('start_date')
             end_date = form.cleaned_data.get('end_date')
-            uchastok_search = form.cleaned_data.get('uchastok_search')
+            #uchastok_search = form.cleaned_data.get('uchastok_search')
             kroy_no_search = form.cleaned_data.get('kroy_no_search')
 
             filter_conditions = Q()
@@ -73,8 +73,8 @@ class MasterdataListView(ListView):
                 filter_conditions &= Q(created__gte=start_date)
             if end_date:
                 filter_conditions &= Q(created__lte=end_date)
-            if uchastok_search:
-                queryset = queryset.filter(Q(uchastok__name__icontains=uchastok_search))
+            #if uchastok_search:
+                #queryset = queryset.filter(Q(uchastok__name__icontains=uchastok_search))
             if kroy_no_search:
                 filter_conditions &= Q(kroy_no__icontains=kroy_no_search)
 
@@ -87,6 +87,8 @@ class MasterdataListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = MasterdataSearchForm(self.request.GET)
+        context['additional_variable'] = 'Some additional value'
+
         return context
 
 def MdataKroyDetailView(request, kroy_id):
@@ -109,8 +111,9 @@ class KroyListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['uchastok'] = Uchastok.objects.all()
-        
+        #context['uchastok'] = Uchastok.objects.all()
+        context['user'] = User.objects.all()
+
         return context
 
 class KroyCreateView(CreateView):
@@ -124,16 +127,26 @@ class KroyCreateView(CreateView):
         context['kroy_list'] = Kroy.objects.all().order_by('-created')[
                                       :10]  # Add this line to pass the data to the template
         return context
-
 def KroyDetailView(request, kroy_id):
+    kroydetil_instance = Kroy_detail.objects.filter(user=request.user).first()
+
+    if request.method == 'POST':
+        form = KroyDetailForm(request.POST, instance=kroydetil_instance)
+        if form.is_valid():
+            form.save()
+    else:
+        form = KroyDetailForm(instance=kroydetil_instance)
+
     kroy_instance = get_object_or_404(Kroy, pk=kroy_id)
-    kroy_details = Kroy_detail.objects.filter(kroy=kroy_instance)  # Retrieve related Kroy_detail records
+    kroy_details = Kroy_detail.objects.filter(kroy=kroy_instance)
 
     context = {
+        'form': form,
         'kroy_instance': kroy_instance,
-        'kroy_details': kroy_details,  # Pass the related records to the template
+        'kroy_details': kroy_details,
     }
     return render(request, 'main/kroy/kroy_detail_view.html', context)
+
 class KroyUpdateView(UpdateView):
     model = Kroy
     form_class = KroyForm
@@ -163,10 +176,27 @@ class KroyDetailUpdateView(UpdateView):
 
 @login_required
 def MasterdatauserListView(request):
-    # Filter the data based on the logged-in user
+
+    if request.method == 'POST':
+        kroy_no = request.POST.get('kroy_no')
+        edinitsa = request.POST.get('edinitsa')
+
+        # No need to get the username separately; use request.user directly
+        user = request.user
+
+        masterdata = Masterdata(
+            kroy_no=kroy_no,
+            edinitsa=edinitsa,
+            user=user,
+        )
+        masterdata.save()
+
     context = {
         'masterdata_list': Masterdata.objects.filter(user=request.user),
-        'kroy_detail_list': Kroy_detail.objects.filter(user=request.user)
+        'kroy_detail_list': Kroy_detail.objects.filter(user=request.user),
+        'user': request.user,
+        'kroy_list': Kroy.objects.all(),
     }
 
     return render(request, 'main/masterdatauser_list.html', context)
+

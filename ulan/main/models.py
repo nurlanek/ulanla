@@ -37,8 +37,7 @@ class Kroy_detail(models.Model):
     razmer = models.CharField(max_length=200, verbose_name='Размер')
     rost = models.CharField(max_length=200, verbose_name='Рост')
     stuk = models.IntegerField(verbose_name='Штук')
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, default=get_default_user,
-                             verbose_name='Пользователь')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Created at')
 
 
@@ -46,34 +45,30 @@ class Kroy_detail(models.Model):
         return self.pachka
 
 
-class Uchastok(models.Model):
+"""class Uchastok(models.Model):
     class Meta:
             verbose_name_plural = ('Участок')
     name = models.CharField(max_length=150, verbose_name='Наименование')
 
     def __str__(self):
         return self.name
-
+"""
 class Masterdata(models.Model):
     class Meta:
             verbose_name_plural = ('Общая таблица')
+    OPTION_CHOICES = [
+        ('в процессе', 'в процессе'),
+        ('звершень', 'звершень'),
+    ]
+    status = models.CharField(max_length=50, choices=OPTION_CHOICES, default='в процессе')
     kroy_no = models.IntegerField(verbose_name='Крой номер')
-    uchastok = models.ForeignKey(Uchastok, on_delete=models.CASCADE, verbose_name='Участок')
     edinitsa = models.IntegerField(verbose_name='Единица')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
     is_active = models.BooleanField(default=True, verbose_name='Активен')
     description = models.TextField(null=True, blank=True, verbose_name='Примечение')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
 
-class UserUchastok(models.Model):
-    class Meta:
-            verbose_name_plural = ('Пользователь для участка')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    uchastok = models.ForeignKey(Uchastok, on_delete=models.CASCADE, verbose_name='Участок')
-
-
-
-
-
+    def __str__(self):
+        return f"{self.status} - {self.kroy_no}"
 
 
